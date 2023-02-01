@@ -1,3 +1,4 @@
+import java.lang.Double.max
 import kotlin.math.exp
 
 class Matrix(val data: List<List<Double>>) {
@@ -19,6 +20,8 @@ class Matrix(val data: List<List<Double>>) {
         return Matrix(resultData)
     }
 
+    operator fun times(scalar: Double) = Matrix(data.map { row -> row.map { it * scalar }})
+
     operator fun plus(other: Matrix): Matrix {
         if (m != other.m || n != other.n) {
             throw IllegalArgumentException("Incompatible matrix dimensions for addition.")
@@ -31,6 +34,8 @@ class Matrix(val data: List<List<Double>>) {
         }
         return Matrix(resultData)
     }
+
+    operator fun minus(other: Matrix) = this + other * (-1.0)
 
     override fun toString() = data.fold("") { acc, row ->
             "$acc${row.joinToString(" ")}\n"
@@ -49,7 +54,7 @@ class Matrix(val data: List<List<Double>>) {
 
 fun sigmoid(x: Double) = 1.0 / (1 + exp(-x))
 
-fun relu(x: Double) = if (x < 0) 0.0 else x
+fun relu(x: Double) = max(0.0, x)
 
 fun Matrix.sigmoid() = Matrix(data.map { row -> row.map { sigmoid(it) } })
 
